@@ -7,21 +7,40 @@ using System.Threading.Tasks;
 
 namespace Multithreading
 {
-    
-      
-     //7_QueueUserWorkItem
+
+    //8_Start a New Task
     class Program
     {
-        static void Main(string[] args)
+        public static void ThreadMethod()
         {
-            ThreadPool.QueueUserWorkItem((s) =>
+            Task t = Task.Run(() =>
             {
-                Console.WriteLine("Working on a thread from threadpool..");
+                for (int i = 0; i < 100; i++)
+                {
+                    Console.Write("*");
+                }
             }
             );
-
-            Console.ReadLine();
         }
-    }
+        static void Main(string[] args)
+        {
+            Task t = Task.Run(() =>
+            {
+                for (int i = 0; i < 100; i++)
+                {
+                    Console.Write("*");
+                }
+            }
+                );
+
+            t.Wait(); //T.JOIN , Same thing 
+
+            // With Fucntions
+
+            Task t2 = Task.Run(action: ThreadMethod);
+            t2.Wait();
+
+            var t3 = Task.Run(() => ThreadMethod());
+        }
     }
 }
