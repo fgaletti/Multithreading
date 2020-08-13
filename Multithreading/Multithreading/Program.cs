@@ -9,26 +9,37 @@ namespace Multithreading
 {
     class Program
     {
-        // 4 Stopping Thread
+        //  5_Thread_Static
+        [ThreadStatic]
+        public static int _field; // unique for every field 
+
         static void Main(string[] args)
         {
-            bool stopped = false;
-            Thread t = new Thread(new ThreadStart(() =>
+            // thread 1
+            Thread t1 = new Thread(new ThreadStart(() =>
             {
-                while (!stopped)
+                for (int i = 0; i < 10; i++)
                 {
-                    Console.WriteLine("Running...");
-                    Thread.Sleep(1000);
+                    _field++;
+                    Console.WriteLine("Thread A: {0}", _field);
                 }
             }
+            ));
+            t1.Start();
 
-                ));
+            // thread 2
+            Thread t2 = new Thread(new ThreadStart(() =>
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    _field++;
+                    Console.WriteLine("Thread BB: {0}", _field);
+                }
+            }
+            ));
+            t2.Start();
 
-            t.Start();
-            Console.WriteLine("Press any key to exit");
             Console.ReadKey();
-            stopped = true;
-            t.Join();
         }
     }
 }
