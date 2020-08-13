@@ -9,6 +9,7 @@ namespace Multithreading
 {
     class Program
     {
+        // foreground / background
         public static void ThreadMethod()
         {
             for (int i = 0; i < 10; i++)
@@ -20,6 +21,7 @@ namespace Multithreading
         static void Main(string[] args)
         {
             Thread t = new Thread(new ThreadStart(ThreadMethod));
+            t.IsBackground = true; // It does not prevent the program from closing 
             t.Start();
 
             for (int i = 0; i < 4; i++)
