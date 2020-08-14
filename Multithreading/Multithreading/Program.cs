@@ -8,38 +8,29 @@ using System.Threading.Tasks;
 
 namespace Multithreading
 {
-    // 37_Creating a deadlock
-    // where both thread are waiting for each other
+    // 40_Using_The_Interlocked_Class
     class Program
     {
         static void Main(string[] args)
         {
-            object lockA = new object();
-            object lockB = new object();
-
+            int n = 0;
             Task myTask = Task.Run(() =>
             {
-                lock (lockA)
+                for (int i = 0; i < 1000000; i++)
                 {
-                    Thread.Sleep(5000); //We could omit this line
-                    lock (lockB)
-                    {
-                        Console.WriteLine("Locked A and B");
-                    }
+                   // n++;
+                    Interlocked.Increment(ref n);
                 }
             }
             );
 
-            lock (lockB)
+            for (int i = 0; i < 1000000; i++)
             {
-                Thread.Sleep(1000);
-                lock (lockA)
-                {
-                    Console.WriteLine("Locked B and A");
-                }
+                n--;
+                Interlocked.Decrement(ref n);
             }
-
             myTask.Wait();
+            Console.WriteLine(n);
         }
     }
 }
