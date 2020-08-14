@@ -14,11 +14,14 @@ namespace Multithreading
         {
             Task[] tasks = new Task[3];
 
+            // 2 case returning INT  : 
+            // Task<int>[] tasks = new Task<int>[3];
+
             tasks[0] = Task.Run(() =>
             {
                 Thread.Sleep(1000);
                 Console.WriteLine("1");
-                return 1;
+                return 111;
             });
 
             tasks[1] = Task.Run(() =>
@@ -35,10 +38,12 @@ namespace Multithreading
                 return 3;
             });
 
-            // Task.WaitAll(tasks); // wait for all threads to finish
+            // Activate 2 case to get the result -> Console.WriteLine(tasks[0].Result);
+            
+             Task.WaitAll(tasks); // wait for all threads to finish
 
             //after WaitAll
-            
+
             Console.WriteLine("After WaitAll");
         }
     }
