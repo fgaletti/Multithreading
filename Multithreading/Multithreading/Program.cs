@@ -7,28 +7,39 @@ using System.Threading.Tasks;
 
 namespace Multithreading
 {
-    //10_Adding  ContinueWith (Extension) 
+    //11 Task.WaitAll
     class Program
     {
-
         static void Main(string[] args)
         {
-            Task<int> t = Task.Run(() =>
-            {
-                return 42;
-            }
-                ).ContinueWith((i) =>
-                {
-                    return i.Result * 2;
-                }
-                );
+            Task[] tasks = new Task[3];
 
-            t = t.ContinueWith((i) =>
+            tasks[0] = Task.Run(() =>
             {
-                return i.Result * 2;
+                Thread.Sleep(1000);
+                Console.WriteLine("1");
+                return 1;
             });
 
-            Console.WriteLine(t.Result);
+            tasks[1] = Task.Run(() =>
+            {
+                Thread.Sleep(2000);
+                Console.WriteLine("2");
+                return 2;
+            });
+
+            tasks[2] = Task.Run(() =>
+            {
+                Thread.Sleep(3000);
+                Console.WriteLine("3");
+                return 3;
+            });
+
+            // Task.WaitAll(tasks); // wait for all threads to finish
+
+            //after WaitAll
+            
+            Console.WriteLine("After WaitAll");
         }
     }
 
