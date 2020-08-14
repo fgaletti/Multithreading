@@ -7,49 +7,40 @@ using System.Threading.Tasks;
 
 namespace Multithreading
 {
-    //12 Task.WaitAny
+    //16 Parallel.For / ForEach
     class Program
     {
         static void Main(string[] args)
         {
-            Task<int>[] tasks = new Task<int>[3];
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    Console.WriteLine("Value of {0}",i);
+            //    Thread.Sleep(1000);
+            //}
 
-            tasks[0] = Task.Run(() =>
+            Thread.Sleep(2000);
+            Console.WriteLine("Start");
+
+            // FOR ------
+            Parallel.For(0, 20, (i) =>
             {
-                Thread.Sleep(2000);
-                return 1;
+                Console.WriteLine(i);
+                Thread.Sleep(1000);
             });
 
-            tasks[1] = Task.Run(() =>
+            Console.ReadKey();
+            //FOR EACH ----
+            Console.Clear();
+
+            Thread.Sleep(2000);
+            Console.WriteLine("Start");
+            int[] myArray = { 0, 11, 22, 33, 44, 55, 66, 77, 88, 99, 100 };
+
+            Parallel.ForEach(myArray, (i) =>
             {
-                Thread.Sleep(2000);
-                return 2;
+                Console.WriteLine(i);
+                Thread.Sleep(1000);
             });
-
-            tasks[2] = Task.Run(() =>
-            {
-                Thread.Sleep(2000);
-                return 3;
-            });
-
-            while (tasks.Length > 0)
-            {
-                int i = Task.WaitAny(tasks); // wait for any Task that is completed, it can be Any 1,2,3 in an unpreditable order      
-                Task<int> completedTask = tasks[i];
-                Console.WriteLine(completedTask.Result);
-                var temp = tasks.ToList();
-                temp.RemoveAt(i); // remove the task that is completed
-                tasks = temp.ToArray();
-            }
-
-
-            /* List OF TASK String */
-            /* Task<string>[] tasksStrings = new Task<string>[3];
-             tasksStrings[0] = Task.Run(() =>
-             {
-                 Thread.Sleep(2000);
-                 return "String";
-             });*/
 
         }
     }
