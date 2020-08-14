@@ -7,40 +7,29 @@ using System.Threading.Tasks;
 
 namespace Multithreading
 {
-
-    //8_Start a New Task
+    //10_Adding  ContinueWith (Extension) 
     class Program
     {
-        public static void ThreadMethod()
-        {
-            Task t = Task.Run(() =>
-            {
-                for (int i = 0; i < 100; i++)
-                {
-                    Console.Write("*");
-                }
-            }
-            );
-        }
+
         static void Main(string[] args)
         {
-            Task t = Task.Run(() =>
+            Task<int> t = Task.Run(() =>
             {
-                for (int i = 0; i < 100; i++)
-                {
-                    Console.Write("*");
-                }
+                return 42;
             }
+                ).ContinueWith((i) =>
+                {
+                    return i.Result * 2;
+                }
                 );
 
-            t.Wait(); //T.JOIN , Same thing 
+            t = t.ContinueWith((i) =>
+            {
+                return i.Result * 2;
+            });
 
-            // With Fucntions
-
-            Task t2 = Task.Run(action: ThreadMethod);
-            t2.Wait();
-
-            var t3 = Task.Run(() => ThreadMethod());
+            Console.WriteLine(t.Result);
         }
     }
+
 }
