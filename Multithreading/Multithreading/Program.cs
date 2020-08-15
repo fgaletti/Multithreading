@@ -18,16 +18,16 @@ namespace Multithreading
             {
                 for (int i = 0; i < 1000000; i++)
                 {
-                   // n++;
-                    Interlocked.Increment(ref n);
+                   // n++;     --> Non-Atomic
+                    Interlocked.Increment(ref n); // atomic 
                 }
             }
             );
 
             for (int i = 0; i < 1000000; i++)
             {
-                n--;
-                Interlocked.Decrement(ref n);
+               // n--;        --> Non - Atomic
+                Interlocked.Decrement(ref n); // atomic
             }
             myTask.Wait();
             Console.WriteLine(n);
