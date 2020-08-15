@@ -8,42 +8,23 @@ using System.Threading.Tasks;
 
 namespace Multithreading
 {
-    // 42 Using a CancellationToken
+    // 45 Setting a timeout on a task
     class Program
     {
         static void Main(string[] args)
         {
-            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-            CancellationToken token = cancellationTokenSource.Token;
-
-           // var toke2 = true;
-            Task myTask = Task.Run(() =>
+            Task longRunning = Task.Run(() =>
             {
-                while (!token.IsCancellationRequested)
-                {
-                    Console.Write("*");
-                    Thread.Sleep(1000);
-                }
+                Console.WriteLine("Inside longRunning");
+                Thread.Sleep(5000);
+            });
 
-                token.ThrowIfCancellationRequested(); // notify the user when a task is cancelled
-            }, token
-            );
-
-            try
+            // if it surpasses thta amount of time we can Cut the task Off 
+            int index = Task.WaitAny(new Task[] { longRunning }, 1000);
+            if(index == -1)
             {
-                Console.WriteLine("Press enter to stop the task");
-                Console.ReadLine();
-                cancellationTokenSource.Cancel();
-                myTask.Wait();
+                Console.WriteLine("Task timed out");
             }
-            catch (AggregateException e)
-            {
-
-                Console.WriteLine(e.InnerExceptions[0].Message);
-            }
-           
-            Console.WriteLine("Press enter to end the program");
-            Console.ReadLine();
         }
     }
 }
