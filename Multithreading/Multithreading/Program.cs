@@ -8,29 +8,42 @@ using System.Threading.Tasks;
 
 namespace Multithreading
 {
-    // 40_Using_The_Interlocked_Class
+    // 42 Using a CancellationToken
     class Program
     {
         static void Main(string[] args)
         {
-            int n = 0;
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            CancellationToken token = cancellationTokenSource.Token;
+
+           // var toke2 = true;
             Task myTask = Task.Run(() =>
             {
-                for (int i = 0; i < 1000000; i++)
+                while (!token.IsCancellationRequested)
                 {
-                   // n++;     --> Non-Atomic
-                    Interlocked.Increment(ref n); // atomic 
+                    Console.Write("*");
+                    Thread.Sleep(1000);
                 }
-            }
+
+                token.ThrowIfCancellationRequested(); // notify the user when a task is cancelled
+            }, token
             );
 
-            for (int i = 0; i < 1000000; i++)
+            try
             {
-               // n--;        --> Non - Atomic
-                Interlocked.Decrement(ref n); // atomic
+                Console.WriteLine("Press enter to stop the task");
+                Console.ReadLine();
+                cancellationTokenSource.Cancel();
+                myTask.Wait();
             }
-            myTask.Wait();
-            Console.WriteLine(n);
+            catch (AggregateException e)
+            {
+
+                Console.WriteLine(e.InnerExceptions[0].Message);
+            }
+           
+            Console.WriteLine("Press enter to end the program");
+            Console.ReadLine();
         }
     }
 }
